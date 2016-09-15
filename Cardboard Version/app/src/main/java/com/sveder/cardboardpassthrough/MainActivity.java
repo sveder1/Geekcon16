@@ -64,8 +64,10 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
 	        "varying vec2 textureCoordinate;                            \n" +
 	        "uniform samplerExternalOES s_texture;               \n" +
 	        "void main(void) {" +
-	        //"  gl_FragColor = 1.0 - texture2D( s_texture, textureCoordinate );\n" +
-	        "  gl_FragColor = vec4(textureCoordinate., 0.0, 0.0, 1.0);\n" +
+	        "  gl_FragColor.r = floor(texture2D( s_texture, textureCoordinate ).r * 8.0) / 8.0;\n" +
+	        "  gl_FragColor.g = floor(texture2D( s_texture, textureCoordinate ).g * 8.0) / 8.0;\n" +
+	        "  gl_FragColor.b = floor(texture2D( s_texture, textureCoordinate ).b * 4.0) / 4.0;\n" +
+	        //"  gl_FragColor = vec4(textureCoordinate., 0.0, 0.0, 1.0);\n" +
 	        "}";
 
         private FloatBuffer vertexBuffer, textureVerticesBuffer, vertexBuffer2;
