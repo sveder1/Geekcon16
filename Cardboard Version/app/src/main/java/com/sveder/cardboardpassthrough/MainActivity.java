@@ -23,6 +23,8 @@ import android.hardware.Camera;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.Vibrator;
 import android.util.Log;
 import com.google.vrtoolkit.cardboard.*;
@@ -47,8 +49,19 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
     private static final String TAG = "MainActivity";
     private static final int GL_TEXTURE_EXTERNAL_OES = 0x8D65;
     private Camera camera;
+    int mVertexShader, mFragmentShader, mInvertedFragmentShader, mInvertedProgram;
 
-	private final String vertexShaderCode =
+    private Handler mHandler = null;
+    Runnable invertRun = new Runnable() {
+        @Override
+        public void run() {
+            mProgram = mInvertedProgram;
+
+        }
+    };
+
+
+    private final String vertexShaderCode =
 	        "attribute vec4 position;" +
 	        "attribute vec2 inputTextureCoordinate;" +
 	        "varying vec2 textureCoordinate;" +
@@ -66,6 +79,15 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
 	        "void main(void) {" +
 	        "  gl_FragColor = 1.0 - texture2D( s_texture, textureCoordinate );\n" +
 	        "}";
+
+        private final String invertedFragmentShaderCode =
+            "#extension GL_OES_EGL_image_external : require\n"+
+                    "precision mediump float;" +
+                    "varying vec2 textureCoordinate;                            \n" +
+                    "uniform samplerExternalOES s_texture;               \n" +
+                    "void main(void) {" +
+                    "  gl_FragColor = texture2D( s_texture, textureCoordinate );\n" +
+                    "}";
 
         private FloatBuffer vertexBuffer, textureVerticesBuffer, vertexBuffer2;
         private ShortBuffer drawListBuffer, buf2;
@@ -278,14 +300,21 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
         textureVerticesBuffer.put(textureVertices);
         textureVerticesBuffer.position(0);
 
-        int vertexShader = loadGLShader(GLES20.GL_VERTEX_SHADER, vertexShaderCode);
-        int fragmentShader = loadGLShader(GLES20.GL_FRAGMENT_SHADER, fragmentShaderCode);
+        mVertexShader = loadGLShader(GLES20.GL_VERTEX_SHADER, vertexShaderCode);
+        mFragmentShader = loadGLShader(GLES20.GL_FRAGMENT_SHADER, fragmentShaderCode);
+        mInvertedFragmentShader = loadGLShader(GLES20.GL_FRAGMENT_SHADER, invertedFragmentShaderCode);
 
         mProgram = GLES20.glCreateProgram();             // create empty OpenGL ES Program
-        GLES20.glAttachShader(mProgram, vertexShader);   // add the vertex shader to program
-        GLES20.glAttachShader(mProgram, fragmentShader); // add the fragment shader to program
+        GLES20.glAttachShader(mProgram, mVertexShader);   // add the vertex shader to program
+        GLES20.glAttachShader(mProgram, mFragmentShader); // add the fragment shader to program
         GLES20.glLinkProgram(mProgram);
-        
+
+        mInvertedProgram = GLES20.glCreateProgram();
+        // create empty OpenGL ES Program
+        GLES20.glAttachShader(mInvertedProgram, mVertexShader);   // add the vertex shader to program
+        GLES20.glAttachShader(mInvertedProgram, mInvertedFragmentShader); // add the fragment shader to program
+        GLES20.glLinkProgram(mInvertedProgram);
+
         texture = createTexture();
         startCamera(texture);
         
@@ -455,34 +484,10 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
         Matrix.multiplyMM(mView, 0, transform.getEyeView(), 0, mCamera, 0);
 
 
-//        mPositionParam = GLES20.glGetAttribLocation(mGlProgram, "a_Position");
-//        mNormalParam = GLES20.glGetAttribLocation(mGlProgram, "a_Normal");
-//        mColorParam = GLES20.glGetAttribLocation(mGlProgram, "a_Color");
-//
-//        GLES20.glEnableVertexAttribArray(mPositionParam);
-//        GLES20.glEnableVertexAttribArray(mNormalParam);
-//        GLES20.glEnableVertexAttribArray(mColorParam);
-//        checkGLError("mColorParam");
-//
-//        // Apply the eye transformation to the camera.
-//        Matrix.multiplyMM(mView, 0, transform.getEyeView(), 0, mCamera, 0);
-//
-//        // Set the position of the light
-//        Matrix.multiplyMV(mLightPosInEyeSpace, 0, mView, 0, mLightPosInWorldSpace, 0);
-//        GLES20.glUniform3f(mLightPosParam, mLightPosInEyeSpace[0], mLightPosInEyeSpace[1],
-//                mLightPosInEyeSpace[2]);
-//
-//        // Build the ModelView and ModelViewProjection matrices
-//        // for calculating cube position and light.
-//        Matrix.multiplyMM(mModelView, 0, mView, 0, mModelCube, 0);
-//        Matrix.multiplyMM(mModelViewProjection, 0, transform.getPerspective(), 0, mModelView, 0);
-//        drawCube();
-//
-//        // Set mModelView for the floor, so we draw floor in the correct location
-//        Matrix.multiplyMM(mModelView, 0, mView, 0, mModelFloor, 0);
-//        Matrix.multiplyMM(mModelViewProjection, 0, transform.getPerspective(), 0,
-//            mModelView, 0);
-//        drawFloor(transform.getPerspective());
+        if(mHandler == null){
+            mHandler = new Handler(Looper.getMainLooper());
+            mHandler.postDelayed(invertRun,5000);
+        }
     }
 
     @Override
