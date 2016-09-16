@@ -20,6 +20,7 @@ import android.content.Context;
 import android.graphics.SurfaceTexture;
 import android.graphics.SurfaceTexture.OnFrameAvailableListener;
 import android.hardware.Camera;
+import android.media.MediaPlayer;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
 import android.os.Bundle;
@@ -52,20 +53,28 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
     int mVertexShader, mFragmentShader, mInvertedFragmentShader, mInvertedProgram, mTempProg;
     boolean mInvertedToggleFlag = true;
 
+    private MediaPlayer mPlayer = null;
     private Handler mHandler = null;
     private Runnable invertRun = new Runnable() {
         @Override
         public void run() {
+            if(mPlayer == null){
+
+            }
+
             if(mInvertedToggleFlag){
                 mTempProg = mProgram;
                 mProgram = mInvertedProgram;
                 mInvertedProgram = mTempProg;
                 mInvertedToggleFlag = false;
+                mPlayer = MediaPlayer.create(MainActivity.this, R.raw.bg_horror);
+                mPlayer.start();
             }else{
                 mTempProg = mInvertedProgram;
                 mInvertedProgram = mProgram;
                 mProgram = mTempProg;
                 mInvertedToggleFlag = true;
+                mPlayer.pause();
             }
 
             mHandler.removeCallbacks(invertRun);
