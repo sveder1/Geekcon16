@@ -58,10 +58,6 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
     private Runnable invertRun = new Runnable() {
         @Override
         public void run() {
-            if(mPlayer == null){
-
-            }
-
             if(mInvertedToggleFlag){
                 mTempProg = mProgram;
                 mProgram = mInvertedProgram;
