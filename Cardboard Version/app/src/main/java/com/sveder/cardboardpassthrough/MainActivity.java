@@ -39,10 +39,13 @@ import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 
+import android.graphics.RectF;
+
+
 /**
  * A Cardboard sample application.
  */
-public class MainActivity extends CardboardActivity implements CardboardView.StereoRenderer, OnFrameAvailableListener {
+public class MainActivity extends CardboardActivity implements CardboardView.StereoRenderer, OnFrameAvailableListener, Camera.FaceDetectionListener {
 
     private static final String TAG = "MainActivity";
     private static final int GL_TEXTURE_EXTERNAL_OES = 0x8D65;
@@ -132,12 +135,44 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
 	private float[] mView;
 	private float[] mCamera;
 
+    @Override
+    public void onFaceDetection(Camera.Face[] faces, Camera camera) {
+        RectF rectf = new RectF();
+
+        for (Camera.Face face :faces)
+        {
+            int centerX = face.rect.centerX();
+            int centerY = face.rect.centerY();
+
+            android.graphics.Matrix matrix = new android.graphics.Matrix();
+            //Width needs to be divided by 2 because the overlay is for both eyes:
+            prepareMatrix(matrix, false, mOverlayView.getWidth() / 2 , mOverlayView.getHeight());
+            rectf.set(face.rect);
+            matrix.mapRect(rectf);
+
+            mOverlayView.show3DRect((int) rectf.centerX(), (int) rectf.centerY());
+            mOverlayView.show3DToast("Found face! x = " + rectf.centerX() + ", y = " + rectf.centerY());
+        }
+    }
+
+
+    public static void prepareMatrix(android.graphics.Matrix matrix, boolean mirror,
+                                     int viewWidth, int viewHeight) {
+        // This is the value for android.hardware.Camera.setDisplayOrientation.
+        // Camera driver coordinates range from (-1000, -1000) to (1000, 1000).
+        // UI coordinates range from (0, 0) to (width, height).
+        matrix.postScale(viewWidth / 2000f, viewHeight / 2000f);
+        matrix.postTranslate(viewWidth / 2f, viewHeight / 2f);
+
+    }
+
 	public void startCamera(int texture)
     {
         surface = new SurfaceTexture(texture);
         surface.setOnFrameAvailableListener(this);
 
         camera = Camera.open();
+//        camera.setFaceDetectionListener(this);
 
         try
         {
@@ -235,7 +270,7 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
 //
 //
         mOverlayView = (CardboardOverlayView) findViewById(R.id.overlay);
-        mOverlayView.show3DToast("moot.");
+        mOverlayView.show3DRect(0,0);
     }
 
     @Override
@@ -403,15 +438,15 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
     	float[] mtx = new float[16];
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
         surface.updateTexImage();
-        surface.getTransformMatrix(mtx); 
-    	
+        surface.getTransformMatrix(mtx);
+
     }
 	
     @Override
 	public void onFrameAvailable(SurfaceTexture arg0) {
 		this.cardboardView.requestRender();
-		
-	}    	   
+
+    }
 
     /**
      * Draws a frame for an eye. The transformation for that eye (from the camera) is passed in as
@@ -453,7 +488,6 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
         GLES20.glDisableVertexAttribArray(mTextureCoordHandle);
         
         Matrix.multiplyMM(mView, 0, transform.getEyeView(), 0, mCamera, 0);
-
 
 //        mPositionParam = GLES20.glGetAttribLocation(mGlProgram, "a_Position");
 //        mNormalParam = GLES20.glGetAttribLocation(mGlProgram, "a_Normal");

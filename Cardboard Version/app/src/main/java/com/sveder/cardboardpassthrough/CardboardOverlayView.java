@@ -1,34 +1,26 @@
-/*
- * Copyright 2014 Google Inc. All Rights Reserved.
-
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.sveder.cardboardpassthrough;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import java.io.Console;
 
 /**
  * Contains two sub-views to provide a simple stereo HUD.
@@ -37,14 +29,14 @@ public class CardboardOverlayView extends LinearLayout {
     private static final String TAG = CardboardOverlayView.class.getSimpleName();
     private final CardboardOverlayEyeView mLeftView;
     private final CardboardOverlayEyeView mRightView;
-    private AlphaAnimation mTextFadeAnimation;
+    private TranslateAnimation mBloodAnimation;
 
     public CardboardOverlayView(Context context, AttributeSet attrs) {
         super(context, attrs);
         setOrientation(HORIZONTAL);
 
         LayoutParams params = new LayoutParams(
-            LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, 1.0f);
+                LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, 1.0f);
         params.setMargins(0, 0, 0, 0);
 
         mLeftView = new CardboardOverlayEyeView(context, attrs);
@@ -60,20 +52,35 @@ public class CardboardOverlayView extends LinearLayout {
         setColor(Color.rgb(150, 255, 180));
         setVisibility(View.VISIBLE);
 
-        mTextFadeAnimation = new AlphaAnimation(1.0f, 0.0f);
-        mTextFadeAnimation.setDuration(5000);
+        mBloodAnimation = new TranslateAnimation(0, 0, -300, 0);
+        mBloodAnimation.setDuration(1000);
     }
 
     public void show3DToast(String message) {
         setText(message);
         setTextAlpha(1f);
-        mTextFadeAnimation.setAnimationListener(new EndAnimationListener() {
+    }
+
+    public void show3DRect(int centerX, int centerY)
+    {
+        EndAnimationListener mRetry = new EndAnimationListener() {
             @Override
             public void onAnimationEnd(Animation animation) {
-                setTextAlpha(0f);
+                Log.d("lol", "moooo!");
+                mBloodAnimation = new TranslateAnimation(0, 0, -400, 0);
+                mBloodAnimation.setDuration(2000);
+                mBloodAnimation.setAnimationListener(this);
+
+                startAnimation(mBloodAnimation);
             }
-        });
-        startAnimation(mTextFadeAnimation);
+        };
+
+        mLeftView.drawRect(centerX, centerY);
+        mRightView.drawRect(centerX, centerY);
+        mBloodAnimation.setAnimationListener(mRetry);
+
+        startAnimation(mBloodAnimation);
+
     }
 
     private abstract class EndAnimationListener implements Animation.AnimationListener {
@@ -109,15 +116,26 @@ public class CardboardOverlayView extends LinearLayout {
      */
     private class CardboardOverlayEyeView extends ViewGroup {
         private final ImageView imageView;
+        private final ImageView rectView;
         private final TextView textView;
         private float offset;
 
+        private int centerX, centerY;
+
+        private Bitmap bm;
+
         public CardboardOverlayEyeView(Context context, AttributeSet attrs) {
             super(context, attrs);
+            bm = BitmapFactory.decodeResource(getResources(), R.drawable.blood400);
             imageView = new ImageView(context, attrs);
             imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
             imageView.setAdjustViewBounds(true);  // Preserve aspect ratio.
             addView(imageView);
+
+            rectView = new ImageView(context, attrs);
+            rectView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+            rectView.setAdjustViewBounds(true);  // Preserve aspect ratio.
+            addView(rectView);
 
             textView = new TextView(context, attrs);
             textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14.0f);
@@ -130,6 +148,17 @@ public class CardboardOverlayView extends LinearLayout {
         public void setColor(int color) {
             imageView.setColorFilter(color);
             textView.setTextColor(color);
+        }
+
+        public void drawRect(int centerX, int centerY)
+        {
+            this.centerX = centerX;
+            this.centerY = centerY;
+            Bitmap bitmap = Bitmap.createBitmap(500, 500, Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(bitmap);
+            rectView.setImageBitmap(bm);
+
+
         }
 
         public void setText(String text) {
@@ -167,15 +196,18 @@ public class CardboardOverlayView extends LinearLayout {
             float leftMargin = (int) (width * (imageMargin + offset));
             float topMargin = (int) (height * (imageMargin + verticalImageOffset));
             imageView.layout(
-                (int) leftMargin, (int) topMargin,
-                (int) (leftMargin + width * imageSize), (int) (topMargin + height * imageSize));
+                    (int) leftMargin, (int) topMargin,
+                    (int) (leftMargin + width * imageSize), (int) (topMargin + height * imageSize));
 
             // Layout TextView
             leftMargin = offset * width;
             topMargin = height * verticalTextPos;
             textView.layout(
-                (int) leftMargin, (int) topMargin,
-                (int) (leftMargin + width), (int) (topMargin + height * (1.0f - verticalTextPos)));
+                    (int) leftMargin, (int) topMargin,
+                    (int) (leftMargin + width), (int) (topMargin + height * (1.0f - verticalTextPos)));
+
+            rectView.layout(0, 0, width, 1200);
+            Log.d("tag", "Heihgt " + height + " width " + width);
         }
     }
 }
