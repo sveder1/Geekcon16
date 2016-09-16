@@ -49,14 +49,27 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
     private static final String TAG = "MainActivity";
     private static final int GL_TEXTURE_EXTERNAL_OES = 0x8D65;
     private Camera camera;
-    int mVertexShader, mFragmentShader, mInvertedFragmentShader, mInvertedProgram;
+    int mVertexShader, mFragmentShader, mInvertedFragmentShader, mInvertedProgram, mTempProg;
+    boolean mInvertedToggleFlag = true;
 
     private Handler mHandler = null;
-    Runnable invertRun = new Runnable() {
+    private Runnable invertRun = new Runnable() {
         @Override
         public void run() {
-            mProgram = mInvertedProgram;
+            if(mInvertedToggleFlag){
+                mTempProg = mProgram;
+                mProgram = mInvertedProgram;
+                mInvertedProgram = mTempProg;
+                mInvertedToggleFlag = false;
+            }else{
+                mTempProg = mInvertedProgram;
+                mInvertedProgram = mProgram;
+                mProgram = mTempProg;
+                mInvertedToggleFlag = true;
+            }
 
+            mHandler.removeCallbacks(invertRun);
+            mHandler.postDelayed(invertRun, 5000);
         }
     };
 
@@ -455,8 +468,6 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
 
         GLES20.glActiveTexture(GL_TEXTURE_EXTERNAL_OES);
         GLES20.glBindTexture(GL_TEXTURE_EXTERNAL_OES, texture);
-
-
 
         mPositionHandle = GLES20.glGetAttribLocation(mProgram, "position");
         GLES20.glEnableVertexAttribArray(mPositionHandle);
