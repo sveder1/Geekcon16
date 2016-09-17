@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.sveder.cardboardpassthrough;
+package com.sveder.cardboard8bit;
 
 /**
  * Created by cjr on 6/18/14.

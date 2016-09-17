@@ -5,7 +5,7 @@ android {
     buildToolsVersion "24.0.2"
 
     defaultConfig {
-        applicationId "com.sveder.cardboardpassthrough"
+        applicationId "com.sveder.cardboard8bit"
         minSdkVersion 16
         targetSdkVersion 17
     }

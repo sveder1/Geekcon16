@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.sveder.cardboardpassthrough;
+package com.sveder.cardboard8bit;
 
 import android.content.Context;
 import android.graphics.Color;
