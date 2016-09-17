@@ -42,6 +42,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
+import java.util.Random;
 
 import android.graphics.RectF;
 
@@ -451,6 +452,11 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
     @Override
     public void onFaceDetection(Camera.Face[] faces, Camera camera) {
         if (!scareFaces) {
+            return;
+        }
+        Random r = new Random();
+        int random = r.nextInt(10);
+        if ((random % 5) != 0){
             return;
         }
         RectF rectf = new RectF();
