@@ -206,7 +206,7 @@ public class CardboardOverlayView extends LinearLayout {
                     (int) leftMargin, (int) topMargin,
                     (int) (leftMargin + width), (int) (topMargin + height * (1.0f - verticalTextPos)));
 
-            rectView.layout(0, 0, width, 1200);
+            //rectView.layout(0, 0, width, 1200);
             Log.d("tag", "Heihgt " + height + " width " + width);
         }
     }
