@@ -52,8 +52,21 @@ public class CardboardOverlayView extends LinearLayout {
         setColor(Color.rgb(150, 255, 180));
         setVisibility(View.VISIBLE);
 
-        mBloodAnimation = new TranslateAnimation(0, 0, -300, 0);
-        mBloodAnimation.setDuration(1000);
+
+    }
+
+    public void startBlood(){
+        mLeftView.rectView.layout(0, -1000, 1440, 1280);
+        mRightView.rectView.layout(0, -1000, 1440, 1280);
+
+        mLeftView.rectView.forceLayout();
+        mRightView.rectView.forceLayout();
+
+        mBloodAnimation = new TranslateAnimation(0, 0, -1000, 0);
+        mBloodAnimation.setDuration(4000);
+        startAnimation(mBloodAnimation);
+
+        Log.d("lol", "blood started");
     }
 
     public void show3DToast(String message) {
@@ -66,9 +79,9 @@ public class CardboardOverlayView extends LinearLayout {
         EndAnimationListener mRetry = new EndAnimationListener() {
             @Override
             public void onAnimationEnd(Animation animation) {
-                Log.d("lol", "moooo!");
-                mBloodAnimation = new TranslateAnimation(0, 0, -400, 0);
-                mBloodAnimation.setDuration(2000);
+
+                mBloodAnimation = new TranslateAnimation(0, 0, -1000, 0);
+                mBloodAnimation.setDuration(4000);
                 mBloodAnimation.setAnimationListener(this);
 
                 startAnimation(mBloodAnimation);
@@ -77,9 +90,7 @@ public class CardboardOverlayView extends LinearLayout {
 
         mLeftView.drawRect(centerX, centerY);
         mRightView.drawRect(centerX, centerY);
-        mBloodAnimation.setAnimationListener(mRetry);
-
-        startAnimation(mBloodAnimation);
+//        mBloodAnimation.setAnimationListener(mRetry);
 
     }
 
@@ -116,7 +127,7 @@ public class CardboardOverlayView extends LinearLayout {
      */
     private class CardboardOverlayEyeView extends ViewGroup {
         private final ImageView imageView;
-        private final ImageView rectView;
+        public final ImageView rectView;
         private final TextView textView;
         private float offset;
 
@@ -195,19 +206,17 @@ public class CardboardOverlayView extends LinearLayout {
             float imageMargin = (1.0f - imageSize) / 2.0f;
             float leftMargin = (int) (width * (imageMargin + offset));
             float topMargin = (int) (height * (imageMargin + verticalImageOffset));
-            imageView.layout(
-                    (int) leftMargin, (int) topMargin,
-                    (int) (leftMargin + width * imageSize), (int) (topMargin + height * imageSize));
 
             // Layout TextView
             leftMargin = offset * width;
             topMargin = height * verticalTextPos;
-            textView.layout(
-                    (int) leftMargin, (int) topMargin,
-                    (int) (leftMargin + width), (int) (topMargin + height * (1.0f - verticalTextPos)));
 
-            //rectView.layout(0, 0, width, 1200);
-            Log.d("tag", "Heihgt " + height + " width " + width);
+            rectView.layout(0, -3000, width, width);
+
+//            rectView.setVisibility(INVISIBLE);
+
+
+            Log.d("lol", "Heihgt " + height + " width " + width);
         }
     }
 }

@@ -73,6 +73,8 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
                 Log.d("lol","Scream plz?");
                 mPlayer = MediaPlayer.create(MainActivity.this, R.raw.scream);
                 mPlayer.start();
+
+                mOverlayView.startBlood();
             }
 
             if (flickerCount > flickerTotal){
