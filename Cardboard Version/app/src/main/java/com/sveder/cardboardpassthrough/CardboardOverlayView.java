@@ -141,7 +141,7 @@ public class CardboardOverlayView extends LinearLayout {
         public CardboardOverlayEyeView(Context context, AttributeSet attrs) {
             super(context, attrs);
             bmBlood = BitmapFactory.decodeResource(getResources(), R.drawable.blood400);
-            bmMask = BitmapFactory.decodeResource(getResources(), R.drawable.mask);
+            bmMask = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
 
             imageView = new ImageView(context, attrs);
             imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);

@@ -56,6 +56,7 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
     private Camera camera;
     int mVertexShader, mFragmentShader, mInvertedFragmentShader, mInvertedProgram, mTempProg, mBlackWhite;
     boolean mInvertedToggleFlag = true;
+    boolean mDidBleedYet = false;
 
     int startTime = 50 * 1000;
     int laughTime = startTime;
@@ -76,7 +77,10 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
                 mPlayer = MediaPlayer.create(MainActivity.this, R.raw.scream);
                 mPlayer.start();
 
-                mOverlayView.startBlood();
+                if(!mDidBleedYet){
+                    mOverlayView.startBlood();
+                    mDidBleedYet = true;
+                }
             }
 
             if (flickerCount > flickerTotal){
