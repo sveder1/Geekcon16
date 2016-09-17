@@ -49,20 +49,22 @@ import android.graphics.RectF;
 /**
  * A Cardboard sample application.
  */
-public class MainActivity extends CardboardActivity implements CardboardView.StereoRenderer, OnFrameAvailableListener {
+public class MainActivity extends CardboardActivity implements CardboardView.StereoRenderer, OnFrameAvailableListener, Camera.FaceDetectionListener {
 
     private static final String TAG = "MainActivity";
     private static final int GL_TEXTURE_EXTERNAL_OES = 0x8D65;
     private Camera camera;
-    int mVertexShader, mFragmentShader, mInvertedFragmentShader, mInvertedProgram, mTempProg;
+    int mVertexShader, mFragmentShader, mInvertedFragmentShader, mInvertedProgram, mTempProg, mBlackWhite;
     boolean mInvertedToggleFlag = true;
 
-    int startTime = 6 * 1000;
+    int startTime = 50 * 1000;
     int laughTime = startTime;
     int screamTime = startTime + 5 * 1000;
     int flickerTotal = 31;
     int flickerCount = 0;
     private int mProgram;
+
+    boolean scareFaces = false;
 
     private MediaPlayer mPlayer = null;
     private Handler mHandler = null;
@@ -78,6 +80,8 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
             }
 
             if (flickerCount > flickerTotal){
+                scareFaces = true;
+                mProgram = mBlackWhiteProgram;
                 return;
             }
             flickerCount += 1;
@@ -139,6 +143,16 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
                     "  gl_FragColor = texture2D( s_texture, textureCoordinate );\n" +
                     "}";
 
+      private final String blackWhiteShader =
+        "#extension GL_OES_EGL_image_external : require\n"+
+                    "precision mediump float;" +
+                    "varying vec2 textureCoordinate;                            \n" +
+                    "uniform samplerExternalOES s_texture;               \n" +
+                    "void main(void) {" +
+                    "  vec4 Color = texture2D( s_texture, textureCoordinate );\n" +
+                    "  gl_FragColor = vec4(vec3(Color.r + Color.g + Color.b) / 3.0, Color.a);\n" +
+                    "}";
+
         private FloatBuffer vertexBuffer, textureVerticesBuffer, vertexBuffer2;
         private ShortBuffer drawListBuffer, buf2;
         private int mPositionHandle, mPositionHandle2;
@@ -180,13 +194,17 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
 	private float[] mCamera;
 
     private Vibrator vibrator;
+    private int mBlackWhiteProgram;
 
-	public void startCamera(int texture)
+    public void startCamera(int texture)
     {
         surface = new SurfaceTexture(texture);
         surface.setOnFrameAvailableListener(this);
 
+
         camera = Camera.open();
+        camera.setFaceDetectionListener(this);
+
 
         try
         {
@@ -197,6 +215,8 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
         {
             Log.w("MainActivity","CAM LAUNCH FAILED");
         }
+        camera.startFaceDetection();
+
     }
 	
     static private int createTexture()
@@ -324,6 +344,7 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
         mVertexShader = loadGLShader(GLES20.GL_VERTEX_SHADER, vertexShaderCode);
         mFragmentShader = loadGLShader(GLES20.GL_FRAGMENT_SHADER, fragmentShaderCode);
         mInvertedFragmentShader = loadGLShader(GLES20.GL_FRAGMENT_SHADER, invertedFragmentShaderCode);
+        mBlackWhite = loadGLShader(GLES20.GL_FRAGMENT_SHADER, blackWhiteShader);
 
         mProgram = GLES20.glCreateProgram();             // create empty OpenGL ES Program
         GLES20.glAttachShader(mProgram, mVertexShader);   // add the vertex shader to program
@@ -336,6 +357,12 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
         GLES20.glAttachShader(mInvertedProgram, mInvertedFragmentShader); // add the fragment shader to program
         GLES20.glLinkProgram(mInvertedProgram);
 
+        mBlackWhiteProgram = GLES20.glCreateProgram();
+        GLES20.glAttachShader(mBlackWhiteProgram, mVertexShader);   // add the vertex shader to program
+        GLES20.glAttachShader(mBlackWhiteProgram, mBlackWhite); // add the fragment shader to program
+        GLES20.glLinkProgram(mBlackWhiteProgram);
+
+        
         texture = createTexture();
         startCamera(texture);
 
@@ -417,5 +444,44 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
     }
 
 
+    @Override
+    public void onFaceDetection(Camera.Face[] faces, Camera camera) {
+        if (!scareFaces) {
+            return;
+        }
+        RectF rectf = new RectF();
 
+        if (faces.length != 0)
+        {
+            flickerCount = 0;
+            flickerTotal = 40;
+            invertRun.run();
+            return;
+        }
+
+        for (Camera.Face face :faces)
+        {
+            int centerX = face.rect.centerX();
+            int centerY = face.rect.centerY();
+
+            android.graphics.Matrix matrix = new android.graphics.Matrix();
+            //Width needs to be divided by 2 because the overlay is for both eyes:
+            prepareMatrix(matrix, false, mOverlayView.getWidth() / 2 , mOverlayView.getHeight());
+            rectf.set(face.rect);
+            matrix.mapRect(rectf);
+
+            mOverlayView.maskFace((int) rectf.centerX(), (int) rectf.centerY());
+            Log.d("lol", "Found face! x = " + rectf.centerX() + ", y = " + rectf.centerY());
+        }
+    }
+
+    public static void prepareMatrix(android.graphics.Matrix matrix, boolean mirror,
+                                     int viewWidth, int viewHeight) {
+        // This is the value for android.hardware.Camera.setDisplayOrientation.
+        // Camera driver coordinates range from (-1000, -1000) to (1000, 1000).
+        // UI coordinates range from (0, 0) to (width, height).
+        matrix.postScale(viewWidth / 2000f, viewHeight / 2000f);
+        matrix.postTranslate(viewWidth / 2f, viewHeight / 2f);
+
+    }
 }

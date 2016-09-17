@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -13,14 +12,11 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import java.io.Console;
 
 /**
  * Contains two sub-views to provide a simple stereo HUD.
@@ -56,11 +52,11 @@ public class CardboardOverlayView extends LinearLayout {
     }
 
     public void startBlood(){
-        mLeftView.rectView.layout(0, -1000, 1440, 1280);
-        mRightView.rectView.layout(0, -1000, 1440, 1280);
+        mLeftView.bloodView.layout(0, -1000, 1440, 1280);
+        mRightView.bloodView.layout(0, -1000, 1440, 1280);
 
-        mLeftView.rectView.forceLayout();
-        mRightView.rectView.forceLayout();
+        mLeftView.bloodView.forceLayout();
+        mRightView.bloodView.forceLayout();
 
         mBloodAnimation = new TranslateAnimation(0, 0, -1000, 0);
         mBloodAnimation.setDuration(4000);
@@ -88,10 +84,17 @@ public class CardboardOverlayView extends LinearLayout {
             }
         };
 
-        mLeftView.drawRect(centerX, centerY);
-        mRightView.drawRect(centerX, centerY);
+        mLeftView.drawBlood();
+        mRightView.drawBlood();
+
+        // Continouse bleeding:
 //        mBloodAnimation.setAnimationListener(mRetry);
 
+    }
+
+    public void maskFace(int centerX, int centerY){
+//        mLeftView.maskFace(centerX, centerY);
+//        mRightView.maskFace(centerX, centerY);
     }
 
     private abstract class EndAnimationListener implements Animation.AnimationListener {
@@ -127,26 +130,28 @@ public class CardboardOverlayView extends LinearLayout {
      */
     private class CardboardOverlayEyeView extends ViewGroup {
         private final ImageView imageView;
-        public final ImageView rectView;
+        public final ImageView bloodView;
         private final TextView textView;
         private float offset;
 
         private int centerX, centerY;
 
-        private Bitmap bm;
+        private Bitmap bmBlood, bmMask;
 
         public CardboardOverlayEyeView(Context context, AttributeSet attrs) {
             super(context, attrs);
-            bm = BitmapFactory.decodeResource(getResources(), R.drawable.blood400);
+            bmBlood = BitmapFactory.decodeResource(getResources(), R.drawable.blood400);
+            bmMask = BitmapFactory.decodeResource(getResources(), R.drawable.mask);
+
             imageView = new ImageView(context, attrs);
             imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
             imageView.setAdjustViewBounds(true);  // Preserve aspect ratio.
             addView(imageView);
 
-            rectView = new ImageView(context, attrs);
-            rectView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-            rectView.setAdjustViewBounds(true);  // Preserve aspect ratio.
-            addView(rectView);
+            bloodView = new ImageView(context, attrs);
+            bloodView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+            bloodView.setAdjustViewBounds(true);  // Preserve aspect ratio.
+            addView(bloodView);
 
             textView = new TextView(context, attrs);
             textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14.0f);
@@ -161,13 +166,15 @@ public class CardboardOverlayView extends LinearLayout {
             textView.setTextColor(color);
         }
 
-        public void drawRect(int centerX, int centerY)
+        public void drawBlood()
         {
+            bloodView.setImageBitmap(bmBlood);
+        }
+
+        public void maskFace(int centerX, int centerY) {
             this.centerX = centerX;
             this.centerY = centerY;
-            Bitmap bitmap = Bitmap.createBitmap(500, 500, Bitmap.Config.ARGB_8888);
-            Canvas canvas = new Canvas(bitmap);
-            rectView.setImageBitmap(bm);
+            imageView.setImageBitmap(bmMask);
 
 
         }
@@ -203,15 +210,16 @@ public class CardboardOverlayView extends LinearLayout {
             final float verticalTextPos = 0.52f;
 
             // Layout ImageView
+            // Layout ImageView
             float imageMargin = (1.0f - imageSize) / 2.0f;
             float leftMargin = (int) (width * (imageMargin + offset));
             float topMargin = (int) (height * (imageMargin + verticalImageOffset));
+            imageView.layout(
+                    (int) leftMargin, (int) topMargin,
+                    (int) (leftMargin + width * imageSize), (int) (topMargin + height * imageSize));
+            
 
-            // Layout TextView
-            leftMargin = offset * width;
-            topMargin = height * verticalTextPos;
-
-            rectView.layout(0, -3000, width, width);
+            bloodView.layout(0, -3000, width, width);
 
 //            rectView.setVisibility(INVISIBLE);
 
