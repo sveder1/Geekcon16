@@ -52,10 +52,10 @@
       <file leaf-file-name="MainActivity.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/sveder/cardboardpassthrough/MainActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.59859157">
-              <caret line="362" column="47" selection-start-line="362" selection-start-column="47" selection-end-line="362" selection-end-column="47" />
+            <state vertical-scroll-proportion="0.2945055">
+              <caret line="412" column="72" selection-start-line="412" selection-start-column="72" selection-end-line="412" selection-end-column="72" />
               <folding>
-                <element signature="e#0#17075#0" expanded="true" />
+                <element signature="e#0#17453#0" expanded="true" />
                 <element signature="imports" expanded="true" />
               </folding>
             </state>
@@ -1669,6 +1669,10 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="ProjectPane" />
+      <pane id="Scope" />
+      <pane id="PackagesPane" />
+      <pane id="Scratches" />
       <pane id="AndroidView">
         <subPane>
           <PATH>
@@ -1679,10 +1683,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
-      <pane id="ProjectPane" />
-      <pane id="Scope" />
-      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -1975,7 +1975,7 @@
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32729805" sideWeight="0.5025707" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Android Monitor" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32729805" sideWeight="0.4974293" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Android Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32729805" sideWeight="0.4974293" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3286908" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -2040,7 +2040,28 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#0#17075#0" expanded="true" />
+            <element signature="e#0#17453#0" expanded="true" />
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/sveder/cardboardpassthrough/CardboardOverlayView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="98" column="0" selection-start-line="98" selection-start-column="0" selection-end-line="98" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/sveder/cardboardpassthrough/MainActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#17453#0" expanded="true" />
             <element signature="imports" expanded="true" />
           </folding>
         </state>
@@ -2061,7 +2082,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#0#17075#0" expanded="true" />
+            <element signature="e#0#17453#0" expanded="true" />
             <element signature="imports" expanded="true" />
           </folding>
         </state>
@@ -2082,7 +2103,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="76" column="42" selection-start-line="76" selection-start-column="42" selection-end-line="76" selection-end-column="42" />
           <folding>
-            <element signature="e#0#17075#0" expanded="true" />
+            <element signature="e#0#17453#0" expanded="true" />
             <element signature="imports" expanded="true" />
           </folding>
         </state>
@@ -2103,7 +2124,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#0#17075#0" expanded="true" />
+            <element signature="e#0#17453#0" expanded="true" />
             <element signature="imports" expanded="true" />
           </folding>
         </state>
@@ -2124,7 +2145,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#0#17075#0" expanded="true" />
+            <element signature="e#0#17453#0" expanded="true" />
             <element signature="imports" expanded="true" />
           </folding>
         </state>
@@ -2145,7 +2166,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="63" column="39" selection-start-line="63" selection-start-column="39" selection-end-line="63" selection-end-column="39" />
           <folding>
-            <element signature="e#0#17075#0" expanded="true" />
+            <element signature="e#0#17453#0" expanded="true" />
             <element signature="imports" expanded="true" />
           </folding>
         </state>
@@ -2166,7 +2187,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#0#17075#0" expanded="true" />
+            <element signature="e#0#17453#0" expanded="true" />
             <element signature="imports" expanded="true" />
           </folding>
         </state>
@@ -2187,7 +2208,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="274" column="0" selection-start-line="274" selection-start-column="0" selection-end-line="274" selection-end-column="0" />
           <folding>
-            <element signature="e#0#17075#0" expanded="true" />
+            <element signature="e#0#17453#0" expanded="true" />
             <element signature="imports" expanded="true" />
           </folding>
         </state>
@@ -2208,7 +2229,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="454" column="47" selection-start-line="454" selection-start-column="47" selection-end-line="454" selection-end-column="47" />
           <folding>
-            <element signature="e#0#17075#0" expanded="true" />
+            <element signature="e#0#17453#0" expanded="true" />
             <element signature="imports" expanded="true" />
           </folding>
         </state>
@@ -2229,7 +2250,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="454" column="47" selection-start-line="454" selection-start-column="47" selection-end-line="454" selection-end-column="47" />
           <folding>
-            <element signature="e#0#17075#0" expanded="true" />
+            <element signature="e#0#17453#0" expanded="true" />
             <element signature="imports" expanded="true" />
           </folding>
         </state>
@@ -2250,7 +2271,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="446" column="55" selection-start-line="446" selection-start-column="55" selection-end-line="446" selection-end-column="55" />
           <folding>
-            <element signature="e#0#17075#0" expanded="true" />
+            <element signature="e#0#17453#0" expanded="true" />
             <element signature="imports" expanded="true" />
           </folding>
         </state>
@@ -2271,7 +2292,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="492" column="0" selection-start-line="492" selection-start-column="0" selection-end-line="492" selection-end-column="0" />
           <folding>
-            <element signature="e#0#17075#0" expanded="true" />
+            <element signature="e#0#17453#0" expanded="true" />
             <element signature="imports" expanded="true" />
           </folding>
         </state>
@@ -2292,7 +2313,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="152" column="29" selection-start-line="152" selection-start-column="29" selection-end-line="152" selection-end-column="29" />
           <folding>
-            <element signature="e#0#17075#0" expanded="true" />
+            <element signature="e#0#17453#0" expanded="true" />
             <element signature="imports" expanded="true" />
           </folding>
         </state>
@@ -2313,7 +2334,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#0#17075#0" expanded="true" />
+            <element signature="e#0#17453#0" expanded="true" />
             <element signature="imports" expanded="true" />
           </folding>
         </state>
@@ -2324,7 +2345,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#0#17075#0" expanded="true" />
+            <element signature="e#0#17453#0" expanded="true" />
             <element signature="imports" expanded="true" />
           </folding>
         </state>
@@ -2354,10 +2375,10 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/sveder/cardboardpassthrough/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.59859157">
-          <caret line="362" column="47" selection-start-line="362" selection-start-column="47" selection-end-line="362" selection-end-column="47" />
+        <state vertical-scroll-proportion="0.2945055">
+          <caret line="412" column="72" selection-start-line="412" selection-start-column="72" selection-end-line="412" selection-end-column="72" />
           <folding>
-            <element signature="e#0#17075#0" expanded="true" />
+            <element signature="e#0#17453#0" expanded="true" />
             <element signature="imports" expanded="true" />
           </folding>
         </state>

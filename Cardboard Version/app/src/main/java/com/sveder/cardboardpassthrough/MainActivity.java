@@ -139,8 +139,10 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
                     "precision mediump float;" +
                     "varying vec2 textureCoordinate;                            \n" +
                     "uniform samplerExternalOES s_texture;               \n" +
+                    "uniform float inTime;               \n" +
                     "void main(void) {" +
                     "  gl_FragColor = texture2D( s_texture, textureCoordinate );\n" +
+                    "  gl_FragColor.r = inTime/10.0;\n" +
                     "}";
 
       private final String blackWhiteShader =
@@ -405,8 +407,11 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
         GLES20.glEnableVertexAttribArray(mPositionHandle);
         GLES20.glVertexAttribPointer(mPositionHandle, COORDS_PER_VERTEX, GLES20.GL_FLOAT,
         		false,vertexStride, vertexBuffer);
-        
 
+        int inTime = GLES20.glGetUniformLocation(mProgram, "inTime");
+        GLES20.glEnable(inTime);
+        GLES20.glUniform1f(inTime, SystemClock.currentThreadTimeMillis() / 1000);
+        Log.d("lol", "TIME: " + SystemClock.currentThreadTimeMillis() / 1000.0);
         mTextureCoordHandle = GLES20.glGetAttribLocation(mProgram, "inputTextureCoordinate");
         GLES20.glEnableVertexAttribArray(mTextureCoordHandle);
         GLES20.glVertexAttribPointer(mTextureCoordHandle, COORDS_PER_VERTEX, GLES20.GL_FLOAT,
